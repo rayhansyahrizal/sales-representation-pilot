@@ -1,0 +1,19 @@
+{
+  "protocol": "online-repeat-purchase-temporal-sensitivity-v1",
+  "frozen_at": "2026-07-29T18:10:41+07:00",
+  "exploratory": true,
+  "confirmatory": false,
+  "builder_accessible": true,
+  "parent_protocol": "manifests/temporal-stability-manifest.json",
+  "source_feature_artifact": "artifacts/exploratory/features/online_customer_episodes.parquet",
+  "features": ["recency_days", "unique_invoices", "unique_items", "gross_quantity", "gross_value", "tenure_days", "calendar_month"],
+  "duplicate_feature_action": "remove purchase_frequency because it is exactly identical to unique_invoices; retain unique_invoices",
+  "model": "same expanding-window median-imputed, standardized LogisticRegression(C=1.0,max_iter=500) as parent; no tuning",
+  "evaluation_and_metrics": "same monthly cutoffs, leakage checks, reference probabilities, metrics, and cohorts as parent",
+  "negative_control": "repeat parent within-training-cutoff label permutation independently for seeds 20260729 through 20260828 inclusive; refit at every cutoff",
+  "negative_control_summaries": ["per-cutoff 5th, median, and 95th percentile PR-AUC gain and ROC-AUC", "per-cutoff fraction of controls at least as large as real duplicate-free model", "maximum control excursion across cutoffs per seed", "familywise fraction whose maximum PR-AUC gain is at least the original September 2010 control gain"],
+  "interpretation_rule": "The ranking conclusion survives duplicate removal if duplicate-free PR-AUC gain remains positive in at least 80% of cutoffs. Treat the September excursion as compatible with permutation variability if at least 5% of fixed repetitions have a maximum gain at least that large; otherwise retain it as an unusual falsification warning. Coefficients remain descriptive, and no causal, confirmatory, tuned, or hidden-holdout claim is allowed.",
+  "repetitions": 100,
+  "seeds": {"first": 20260729, "last": 20260828},
+  "original_september_2010_permutation_pr_auc_gain": 0.196
+}
