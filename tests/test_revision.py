@@ -60,6 +60,8 @@ def test_property_asof_ambiguity_files_ties_and_future_guard():
     pd.testing.assert_frame_equal(le,asof_properties(q,p.sample(frac=1,random_state=2),strict=False))
     bad=le.copy(); bad.loc[0,'property_timestamp']=99
     with pytest.raises(AssertionError): asof_properties(q,p,validate_result=bad)
+    bad=le.copy(); bad.loc[0,'itemid']=999
+    with pytest.raises(AssertionError): asof_properties(q,p,validate_result=bad)
 
 
 def test_episodes_group_ties_candidates_cold_start_censor_and_shuffle():
@@ -75,6 +77,8 @@ def test_episodes_group_ties_candidates_cold_start_censor_and_shuffle():
     assert a.diagnostics['candidate_first_event_violations']==0
     bad=a.episodes.copy(); bad.loc[bad.index[0],['candidate_contains_target','scorable']]=[False,True]
     with pytest.raises(AssertionError): build_next_event_episodes(e,validate_result=bad)
+    bad=a.episodes.copy(); bad.loc[bad.index[0],'candidate_max_first_seen']=999
+    with pytest.raises(AssertionError): build_next_event_episodes(e,validate_result=bad)
 
 
 def test_manifest_commitment_horizons_and_governance(tmp_path):
@@ -86,8 +90,14 @@ def test_manifest_commitment_horizons_and_governance(tmp_path):
     assert check_horizon_completeness('online','2020-01-01','2020-01-31')['complete']
     assert not check_horizon_completeness('online','2020-01-02','2020-01-31')['complete']
     assert check_horizon_completeness('retailrocket',episodes_have_next=True)['complete']
-    state={'commitment':c,'owner':'independent','builder':'builder','physical_custody_evidenced':False,'reveals':[],'post_reveal_changes':[]}
+    state={'commitment':c,'owner':'independent','builder':'builder','physical_custody_evidenced':False,
+           'horizon_completeness':{},'reveals':[],'post_reveal_changes':[]}
     gate=holdout_governance_gate(m,state)
     assert not gate['pass'] and 'physical_custody_not_evidenced' in gate['failures']
-    state.update(physical_custody_evidenced=True); assert holdout_governance_gate(m,state)['pass']
+    state.update(physical_custody_evidenced=True)
+    assert 'horizon_completeness_not_evidenced' in holdout_governance_gate(m,state)['failures']
+    state['horizon_completeness']={
+      'online':check_horizon_completeness('online','2020-01-01','2020-01-31'),
+      'retailrocket':check_horizon_completeness('retailrocket',episodes_have_next=True)}
+    assert holdout_governance_gate(m,state)['pass']
     state['reveals']=[{'at':'x'},{'at':'y'}]; assert not holdout_governance_gate(m,state)['pass']

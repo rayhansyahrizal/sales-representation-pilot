@@ -2,7 +2,10 @@
 import time
 import pandas as pd
 import duckdb
-from sales_representation_audit.core import build_online_labels, reconcile_cancellations
+from sales_representation_audit.core import (
+    FROZEN_ADMINISTRATIVE_STOCKCODES, build_online_labels,
+    reconcile_cancellations,
+)
 
 
 def revision_audit(root):
@@ -12,7 +15,10 @@ def revision_audit(root):
     odf=odf.rename(columns={'Invoice':'InvoiceNo','Price':'UnitPrice','Customer ID':'CustomerID'})
     odf['InvoiceDate']=pd.to_datetime(odf.InvoiceDate,errors='coerce'); odf['line_id']=odf.index.astype(str)
     cutoff=odf.InvoiceDate.max()-pd.Timedelta(days=30)
-    lab=build_online_labels(odf,cutoff,dataset_end=odf.InvoiceDate.max())
+    lab=build_online_labels(
+        odf, cutoff, dataset_end=odf.InvoiceDate.max(),
+        administrative_stockcodes=FROZEN_ADMINISTRATIVE_STOCKCODES,
+    )
     t=time.perf_counter(); rec=reconcile_cancellations(odf); timings['online_reconciliation_seconds']=round(time.perf_counter()-t,3)
     online={'horizon_complete':True,'risk_set_prior_only':lab.diagnostics['all_predictors_strictly_before_cutoff'],
             'no_future_predecessors':rec.diagnostics['future_predecessor_violations']==0,
@@ -39,7 +45,12 @@ def revision_audit(root):
     groups,evaluable,covered,cold,censored,nonstrict=map(int,row)
     timings['total_seconds']=round(time.perf_counter()-started,3)
     return {'scope':'whole data; aggregate outputs only','public_audit_boundary_note':'dataset_max_minus_30_days; assertion only, not a final/hidden cutoff',
-      'online_retail':{'assertions':online,'label_diagnostics':lab.diagnostics,'reconciliation':rec.diagnostics},
-      'retailrocket':{'assertions':{'target_strictly_later':nonstrict==0,'candidate_first_seen_not_future':True,'every_scored_target_covered':True,'timestamp_ties_grouped':True},
+      'online_retail':{'assertions':online,
+        'frozen_administrative_stockcodes':sorted(FROZEN_ADMINISTRATIVE_STOCKCODES),
+        'label_diagnostics':lab.diagnostics,'reconciliation':rec.diagnostics},
+      'retailrocket':{'assertions':{'target_strictly_later':nonstrict==0,
+        'candidate_first_seen_not_future':covered+cold==evaluable,
+        'every_scored_target_covered':covered+cold==evaluable,
+        'timestamp_ties_grouped':groups==con.execute("select count(*) from (select visitorid,timestamp from ev group by all)").fetchone()[0]},
         'properties':{'duplicate_update_keys':int(dupkeys),'ambiguous_update_keys':int(ambiguous),'future_property_rows_detected_and_rejected_by_join_rule':int(future)},
         'episodes':{'timestamp_groups':groups,'evaluable':evaluable,'covered':covered,'cold_start':cold,'right_censored':censored,'coverage':covered/evaluable if evaluable else 0}},'timings':timings}

@@ -6,6 +6,13 @@ import hashlib, json
 import pandas as pd
 
 
+# Frozen before confirmatory modeling: non-merchandise administrative codes.
+FROZEN_ADMINISTRATIVE_STOCKCODES = frozenset({
+    'ADJUST', 'ADJUST2', 'AMAZONFEE', 'BANK CHARGES', 'CRUK', 'D', 'DOT',
+    'M', 'POST', 'S',
+})
+
+
 def missingness(df: pd.DataFrame) -> dict:
     n=len(df)
     return {str(c): {'count':int(df[c].isna().sum()), 'fraction': (float(df[c].isna().sum()/n) if n else 0.0)} for c in df.columns}
@@ -39,7 +46,9 @@ def _valid_positive(df, denied):
             ~df.StockCode.astype('string').isin(denied))
 
 
-def build_online_labels(df, cutoff, *, dataset_end=None, administrative_stockcodes=frozenset(), horizon_days=30):
+def build_online_labels(df, cutoff, *, dataset_end=None,
+                        administrative_stockcodes=FROZEN_ADMINISTRATIVE_STOCKCODES,
+                        horizon_days=30):
     """Identified prior-purchaser risk set and gross invoice/customer binary label."""
     d=df.copy(); d['InvoiceDate']=pd.to_datetime(d.InvoiceDate); c=pd.Timestamp(cutoff)
     end=pd.Timestamp(dataset_end) if dataset_end is not None else d.InvoiceDate.max()
@@ -143,8 +152,15 @@ def asof_properties(queries, properties, *, strict=False, validate_result=None):
                      'property_timestamp':pt,'value':val,'ambiguous':amb,'missing':missing,'join_rule':op})
     out=pd.DataFrame(rows).sort_values(['query_id','property'],kind='mergesort').reset_index(drop=True)
     check=validate_result if validate_result is not None else out
+    expected=(q[['query_id','itemid']].drop_duplicates().assign(_join=1)
+              .merge(pd.DataFrame({'property':properties_list,'_join':1}),on='_join')
+              .drop(columns='_join'))
+    observed=check[['query_id','itemid','property']]
+    observed_keys=[tuple(x) for x in observed.to_numpy()]
+    expected_keys=[tuple(x) for x in expected[['query_id','itemid','property']].to_numpy()]
+    assert len(observed_keys)==len(set(observed_keys))
+    assert sorted(observed_keys)==sorted(expected_keys)
     present=check.property_timestamp.notna()
-    assert (check.loc[present,'itemid'].to_numpy()==check.loc[present,'itemid'].to_numpy()).all()
     if strict: assert (check.loc[present,'property_timestamp']<check.loc[present,'query_timestamp']).all()
     else: assert (check.loc[present,'property_timestamp']<=check.loc[present,'query_timestamp']).all()
     return out
@@ -170,16 +186,21 @@ def build_next_event_episodes(events, validate_result=None):
             nxt=recs[i+1]; target_items=tuple(sorted(nxt['history_items']))
             universe=tuple(sorted(k for k,v in first.items() if v<=r['timestamp']))
             contains=all(x in universe for x in target_items)
+            max_first=max((first[x] for x in universe),default=None)
             rows.append({'visitorid':r['visitorid'],'timestamp':r['timestamp'],'target_timestamp':nxt['timestamp'],
               'history_items':r['history_items'],'target_items':target_items,'target_event_types':nxt['event_types'],
-              'candidate_count':len(universe),'candidate_contains_target':contains,'scorable':contains})
+              'candidate_count':len(universe),'candidate_max_first_seen':max_first,
+              'candidate_contains_target':contains,'scorable':contains})
     out=pd.DataFrame(rows).sort_values(['visitorid','timestamp'],kind='mergesort').reset_index(drop=True)
     check=validate_result if validate_result is not None else out
     if len(check):
         assert (check.target_timestamp>check.timestamp).all()
         assert check.loc[check.scorable,'candidate_contains_target'].all()
+        assert (check.candidate_max_first_seen.isna() |
+                (check.candidate_max_first_seen<=check.timestamp)).all()
     cold=int((~out.scorable).sum()) if len(out) else 0
-    violations=sum(any(first[x]>r.timestamp for x in first if first[x]<=r.timestamp) for r in out.itertuples())
+    violations=int((out.candidate_max_first_seen.notna() &
+                    (out.candidate_max_first_seen>out.timestamp)).sum()) if len(out) else 0
     return Episodes(out,{'timestamp_groups':len(gdf),'evaluable_episodes':len(out),'right_censored_groups':censored,
       'cold_start_episodes':cold,'target_coverage':float(out.scorable.mean()) if len(out) else 0,
       'candidate_first_event_violations':int(violations)})
@@ -202,6 +223,9 @@ def holdout_governance_gate(manifest,state):
     if not verify_manifest_commitment(manifest,state.get('commitment','')): failures.append('commitment_mismatch')
     if not state.get('owner') or state.get('owner')==state.get('builder'): failures.append('owner_not_independent')
     if not state.get('physical_custody_evidenced'): failures.append('physical_custody_not_evidenced')
+    horizons=state.get('horizon_completeness',{})
+    if not horizons or not all(bool(v.get('complete')) for v in horizons.values()):
+        failures.append('horizon_completeness_not_evidenced')
     if len(state.get('reveals',[]))>1: failures.append('multiple_reveals')
     if state.get('reveals') and state.get('post_reveal_changes'): failures.append('post_reveal_change_invalidates_run')
     return {'pass':not failures,'failures':failures,'custody_claimed_only_if_evidenced':True}
