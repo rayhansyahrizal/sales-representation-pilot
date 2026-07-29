@@ -1,0 +1,14 @@
+{
+  "hashes": {
+    "artifacts/exploratory/features/online_customer_episodes.parquet": "ffa0360e6d25b523711252193b1abaab3770774ee9dcd06131069307de38297a",
+    "artifacts/exploratory/features/retailrocket_episodes.parquet": "8ea261e306e3a33890436d12edfd4458e4d4e207d3149c44eb8488d022bc5971"
+  },
+  "label": "EXPLORATORY \u2014 builder-accessible evaluation data",
+  "online_cutoffs": 23,
+  "online_rows": 86361,
+  "retailrocket_rows": 1345435,
+  "timings_seconds": {
+    "online_seconds": 24.62546145915985,
+    "retailrocket_seconds": 32.79701729211956
+  }
+}

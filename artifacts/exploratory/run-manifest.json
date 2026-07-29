@@ -1,0 +1,13 @@
+{
+  "base_commit": "3fbdc83f875744fa3ae06e54d9eae0eb436d7661",
+  "command": "uv run python scripts/run_exploratory_baselines.py",
+  "git_sha": "3fbdc83f875744fa3ae06e54d9eae0eb436d7661",
+  "label": "EXPLORATORY \u2014 builder-accessible evaluation data",
+  "manifest_hash": "edbf1ac3283a01c283efc7a3d3291b1de55244608cd12e282f37510a56cac052",
+  "output_hashes": {
+    "artifacts/exploratory/results.json": "31f3eafc79f0f807c90165cc0ce05d9ab816d6c9f1877132b52ef3b7b15e793f"
+  },
+  "runtime_seconds": 15.134927034378052,
+  "seed": 20260729,
+  "status": "complete"
+}

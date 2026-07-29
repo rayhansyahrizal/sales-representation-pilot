@@ -1,0 +1,97 @@
+{
+  "decision": "PROCEED",
+  "kill_rule_inputs": {
+    "both_technically_evaluable": true,
+    "online_pr_auc_gain": 0.334248976017705,
+    "permutation_control_pass": true,
+    "retailrocket_accuracy_gain": 0.0
+  },
+  "label": "EXPLORATORY \u2014 builder-accessible evaluation data",
+  "manifest_hash": "edbf1ac3283a01c283efc7a3d3291b1de55244608cd12e282f37510a56cac052",
+  "online_retail_ii": {
+    "bootstrap": {
+      "pr_auc_delta_ci95": [
+        0.31201193189692256,
+        0.35649366172048086
+      ],
+      "resamples": 2000
+    },
+    "development_rows": 80725,
+    "evaluation_cutoff": "2011-11-01T00:00:00",
+    "evaluation_rows": 5636,
+    "logistic": {
+      "brier": 0.1547993866317258,
+      "log_loss": 0.48553033955791963,
+      "pr_auc": 0.5948948241369385,
+      "precision_at_10pct": 0.7127659574468085,
+      "recall_at_10pct": 0.27365554799183117,
+      "roc_auc": 0.7802437479610208
+    },
+    "permuted": {
+      "brier": 0.19440011299258228,
+      "log_loss": 0.5785189969740512,
+      "pr_auc": 0.30944150942936366,
+      "precision_at_10pct": 0.3599290780141844,
+      "recall_at_10pct": 0.13818924438393465,
+      "roc_auc": 0.43987958158718304
+    },
+    "prevalence": {
+      "brier": 0.19471236573029524,
+      "log_loss": 0.5793809258061814,
+      "pr_auc": 0.2606458481192335,
+      "precision_at_10pct": 0.25177304964539005,
+      "recall_at_10pct": 0.0966643975493533,
+      "roc_auc": 0.5
+    }
+  },
+  "retailrocket": {
+    "boundary_unix_ms": 1439578871370,
+    "development_rows": 1076348,
+    "evaluation_rows": 269087,
+    "global": {
+      "accuracy": 0.9301043900299903,
+      "macro_log_loss": 0.2930945108404044
+    },
+    "items": {
+      "all_evaluation_episodes": 269087,
+      "bounded_compromise": "fixed development top-10 popularity; no full item scoring",
+      "candidate_coverage": 0.9732502870818731,
+      "cold_start_rate": 0.02674971291812685,
+      "covered_episodes": 261889,
+      "ndcg_at_10": 0.004202414131819556,
+      "recall_at_10": 0.007243526837706051,
+      "top10": [
+        461686,
+        257040,
+        309778,
+        9877,
+        219512,
+        369447,
+        7943,
+        111530,
+        119736,
+        37029
+      ]
+    },
+    "permuted_transition": {
+      "accuracy": 0.9301043900299903,
+      "macro_log_loss": 0.2932625155085897,
+      "per_class_recall": {
+        "addtocart": 0.0,
+        "transaction": 0.0,
+        "view": 1.0
+      }
+    },
+    "transition": {
+      "accuracy": 0.9301043900299903,
+      "macro_log_loss": 0.2753327146385378,
+      "per_class_recall": {
+        "addtocart": 0.0,
+        "transaction": 0.0,
+        "view": 1.0
+      }
+    }
+  },
+  "runtime_seconds": 15.134927034378052,
+  "seed": 20260729
+}
