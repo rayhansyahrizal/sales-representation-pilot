@@ -1,0 +1,47 @@
+{
+  "online_retail_ii": {
+    "files": [
+      {
+        "bytes": 45622278,
+        "path": "data/raw/online_retail_ii/online_retail_II.xlsx",
+        "sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980"
+      },
+      {
+        "bytes": 45622418,
+        "path": "data/raw/online_retail_ii/online_retail_ii.zip",
+        "sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb"
+      }
+    ],
+    "source_url": "https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip"
+  },
+  "retailrocket": {
+    "files": [
+      {
+        "bytes": 14454,
+        "path": "data/raw/retailrocket/category_tree.csv",
+        "sha256": "94e865eb0a3d48cbbfe3b79079018dd92509315c88f5fd8d00d0b4b5af434f5b"
+      },
+      {
+        "bytes": 94237913,
+        "path": "data/raw/retailrocket/events.csv",
+        "sha256": "3745aa83238b1e6d44d8fda209807899f420084398f94ddf745f3cbcfecbf9e7"
+      },
+      {
+        "bytes": 484315749,
+        "path": "data/raw/retailrocket/item_properties_part1.csv",
+        "sha256": "30aad5aeca58b2dc27dcc73e1708565f5818e45adb3eb57401f91e87355b0b81"
+      },
+      {
+        "bytes": 408929907,
+        "path": "data/raw/retailrocket/item_properties_part2.csv",
+        "sha256": "d5e7d1a91dc40f522aeb596b267e6c87d8aed689a7192d12369cfb165eb987e5"
+      },
+      {
+        "bytes": 304719974,
+        "path": "data/raw/retailrocket/retailrocket.zip",
+        "sha256": "5dc06173eaa4a4d3b0a5f6afc4daffb0218d95e409aaacba5fdaa0214eacf2a2"
+      }
+    ],
+    "source_url": "https://www.kaggle.com/api/v1/datasets/download/retailrocket/ecommerce-dataset"
+  }
+}

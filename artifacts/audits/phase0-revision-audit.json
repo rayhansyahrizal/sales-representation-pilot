@@ -1,0 +1,69 @@
+{
+  "online_retail": {
+    "assertions": {
+      "horizon_complete": true,
+      "no_future_predecessors": true,
+      "quantity_conserved": true,
+      "risk_set_prior_only": true
+    },
+    "label_diagnostics": {
+      "all_predictors_strictly_before_cutoff": true,
+      "anonymous_row_fraction": 0.22766872999172733,
+      "anonymous_rows": 243007,
+      "cutoff": "2011-11-09T12:50:00",
+      "excluded_invoice_missing_id_fraction": 0.16319832923099872,
+      "excluded_invoices_missing_id": 8752,
+      "horizon_end_exclusive": "2011-12-09T12:50:00",
+      "positive_labels": 1486,
+      "predictor_max_time": "2011-11-09T12:49:00",
+      "risk_set_size": 5719
+    },
+    "reconciliation": {
+      "cancellation_like_lines": 22951,
+      "conflict_rate": 0.03738399198292013,
+      "disagreement_lines": 3458,
+      "future_predecessor_violations": 0,
+      "matched_lines": 15554,
+      "matched_quantity": 434557.0,
+      "matched_quantity_rate": 0.4083879110479579,
+      "missing_customer_lines": 4207,
+      "partial_lines": 121,
+      "partial_rate": 0.005272101433488737,
+      "price_conflict_lines": 858,
+      "quantity_conserved": true,
+      "requested_quantity": 1064079.0,
+      "unmatched_lines": 7276,
+      "unmatched_quantity": 629522.0,
+      "unmatched_rate": 0.3170232233889591
+    }
+  },
+  "public_audit_boundary_note": "dataset_max_minus_30_days; assertion only, not a final/hidden cutoff",
+  "retailrocket": {
+    "assertions": {
+      "candidate_first_seen_not_future": true,
+      "every_scored_target_covered": true,
+      "target_strictly_later": true,
+      "timestamp_ties_grouped": true
+    },
+    "episodes": {
+      "cold_start": 80829,
+      "coverage": 0.939923519159231,
+      "covered": 1264606,
+      "evaluable": 1345435,
+      "right_censored": 1407580,
+      "timestamp_groups": 2753015
+    },
+    "properties": {
+      "ambiguous_update_keys": 0,
+      "duplicate_update_keys": 0,
+      "future_property_rows_detected_and_rejected_by_join_rule": 2096187
+    }
+  },
+  "scope": "whole data; aggregate outputs only",
+  "timings": {
+    "episode_coverage_seconds": 1.025,
+    "online_reconciliation_seconds": 31.608,
+    "property_scan_seconds": 4.882,
+    "total_seconds": 57.729
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "authorization_blockers": [
+    "independent hidden-holdout canonical manifest commitment not supplied",
+    "physical holdout custody outside builder-accessible tree not evidenced"
+  ],
+  "datasets": [
+    {
+      "chronological_holdout": true,
+      "dataset": "online_retail_ii",
+      "entity_holdout": true,
+      "rows": 1067371
+    },
+    {
+      "chronological_holdout": true,
+      "dataset": "retailrocket",
+      "entity_holdout": true,
+      "rows": 2756101
+    }
+  ],
+  "decision": "REVISE",
+  "modeling_authorized": false,
+  "phase": 0,
+  "required_before_modeling": [
+    "obtain independent owner commitment and evidence inaccessible physical holdout custody",
+    "verify complete horizons after private boundaries are revealed exactly once"
+  ],
+  "software_and_whole_data_gates_pass": true
+}

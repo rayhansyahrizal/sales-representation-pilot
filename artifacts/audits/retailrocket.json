@@ -1,0 +1,93 @@
+{
+  "cancellation_return_indicators": {
+    "available": false,
+    "note": "No cancellation, return, fulfillment, quantity, or value field."
+  },
+  "dataset": "retailrocket",
+  "event_counts": {
+    "addtocart": 69332,
+    "transaction": 22457,
+    "view": 2664312
+  },
+  "exact_duplicate_excess_rows": 460,
+  "exact_duplicate_rows": 918,
+  "future_leakage_risks": [
+    "latest rather than as-of item properties",
+    "random event split across visitor/item histories",
+    "future event sequence in actor aggregates",
+    "candidate items unavailable at cutoff",
+    "transactionid used as predictor"
+  ],
+  "holdout_feasibility": {
+    "basis": {
+      "actors": 1407580,
+      "distinct_timestamps": 2750455,
+      "objects": 235061,
+      "repeated_actor_rows": 1754541,
+      "repeated_object_rows": 2682492,
+      "rows": 2756101
+    },
+    "chronological": true,
+    "entity": true
+  },
+  "identity_coverage": {
+    "actor": {
+      "column": "visitorid",
+      "coverage": 1.0,
+      "present_rows": 2756101,
+      "unique": 1407580
+    },
+    "object": {
+      "column": "itemid",
+      "coverage": 1.0,
+      "present_rows": 2756101,
+      "unique": 235061
+    }
+  },
+  "limitations": [
+    "no shown-item/eligibility candidate set or logged recommender action/propensity",
+    "absence of transaction is ambiguous/censored",
+    "hashed property semantics; category validity intervals unavailable",
+    "no cancellation/return or economic-value outcome"
+  ],
+  "missingness": {
+    "event": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "itemid": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "timestamp": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "transactionid": {
+      "count": 2733644,
+      "fraction": 0.9918518951228565
+    },
+    "visitorid": {
+      "count": 0,
+      "fraction": 0.0
+    }
+  },
+  "related_tables": {
+    "category_tree": {
+      "row_count": 1669
+    },
+    "item_properties": {
+      "exact_duplicate_excess_rows": 0,
+      "row_count": 20275902
+    }
+  },
+  "row_count": 2756101,
+  "timestamp": {
+    "column": "timestamp (Unix ms)",
+    "distinct": 2750455,
+    "max": "2015-09-18T02:59:47.788000+00:00",
+    "min": "2015-05-03T03:00:04.384000+00:00",
+    "missing": 0
+  },
+  "unit": "visitor-item event"
+}

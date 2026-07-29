@@ -1,0 +1,92 @@
+{
+  "cancellation_return_indicators": {
+    "either_rows": 22951,
+    "invoice_prefix_c_rows": 19494,
+    "linkage_complete": false,
+    "negative_quantity_rows": 22950,
+    "note": "Indicators exist, but return reason and guaranteed original-invoice linkage do not."
+  },
+  "dataset": "online_retail_ii",
+  "exact_duplicate_excess_rows": 34335,
+  "exact_duplicate_rows": 67242,
+  "future_leakage_risks": [
+    "full-history RFM used inside its own prediction horizon",
+    "global/latest product description or price encoding",
+    "cancellations back-propagated to pre-return state",
+    "target-window basket fields used as predictors"
+  ],
+  "holdout_feasibility": {
+    "basis": {
+      "actors": 5942,
+      "distinct_timestamps": 47635,
+      "objects": 5305,
+      "repeated_actor_rows": 824218,
+      "repeated_object_rows": 1066938,
+      "rows": 1067371
+    },
+    "chronological": true,
+    "entity": true
+  },
+  "identity_coverage": {
+    "actor": {
+      "column": "CustomerID",
+      "coverage": 0.7723312700082726,
+      "present_rows": 824364,
+      "unique": 5942
+    },
+    "object": {
+      "column": "StockCode",
+      "coverage": 1.0,
+      "present_rows": 1067371,
+      "unique": 5305
+    }
+  },
+  "limitations": [
+    "transaction-selected sample; no eligible nonbuyers/exposure risk set",
+    "missing CustomerID selectively limits actor task",
+    "no logged action/propensity, cost, margin, fulfillment, or complete return linkage"
+  ],
+  "missingness": {
+    "Country": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "CustomerID": {
+      "count": 243007,
+      "fraction": 0.22766872999172733
+    },
+    "Description": {
+      "count": 4382,
+      "fraction": 0.0041054141437232225
+    },
+    "InvoiceDate": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "InvoiceNo": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "Quantity": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "StockCode": {
+      "count": 0,
+      "fraction": 0.0
+    },
+    "UnitPrice": {
+      "count": 0,
+      "fraction": 0.0
+    }
+  },
+  "row_count": 1067371,
+  "timestamp": {
+    "column": "InvoiceDate",
+    "distinct": 47635,
+    "max": "2011-12-09T12:50:00",
+    "min": "2009-12-01T07:45:00",
+    "missing": 0
+  },
+  "unit": "invoice line"
+}

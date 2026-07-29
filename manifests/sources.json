@@ -1,0 +1,21 @@
+{
+  "manifest_version": 1,
+  "datasets": {
+    "online_retail_ii": {
+      "publisher": "UCI Machine Learning Repository",
+      "landing_page": "https://archive.ics.uci.edu/dataset/502/online+retail+ii",
+      "download_url": "https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip",
+      "doi": "10.24432/C5CG6D",
+      "license": "CC BY 4.0",
+      "expected_member": "online_retail_II.xlsx"
+    },
+    "retailrocket": {
+      "publisher": "Retail Rocket via documented publisher Kaggle page",
+      "landing_page": "https://www.kaggle.com/datasets/retailrocket/ecommerce-dataset",
+      "download_url": "https://www.kaggle.com/api/v1/datasets/download/retailrocket/ecommerce-dataset",
+      "license": "CC BY-NC-SA 4.0",
+      "expected_members": ["events.csv", "item_properties_part1.csv", "item_properties_part2.csv", "category_tree.csv"],
+      "restriction": "Non-commercial/share-alike license; do not redistribute raw files."
+    }
+  }
+}
