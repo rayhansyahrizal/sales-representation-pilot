@@ -1,0 +1,26 @@
+{
+  "protocol": "online-repeat-purchase-temporal-stability-v1",
+  "frozen_at": "2026-07-29T17:40:36+07:00",
+  "exploratory": true,
+  "confirmatory": false,
+  "builder_accessible": true,
+  "source_feature_artifact": "artifacts/exploratory/features/online_customer_episodes.parquet",
+  "source_dataset_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "seed": 20260729,
+  "target": "at least one valid recorded purchase in [cutoff, cutoff + 30 days)",
+  "risk_set": "identified customers with at least one valid purchase strictly before cutoff",
+  "evaluation_cutoffs": "each monthly cutoff with at least six earlier cutoff cohorts whose 30-day labels are complete by evaluation cutoff",
+  "training_rule": "expanding window; include only episodes where training cutoff + 30 days <= evaluation cutoff",
+  "features": ["recency_days", "purchase_frequency", "unique_invoices", "unique_items", "gross_quantity", "gross_value", "tenure_days", "calendar_month"],
+  "model": "median imputation, standard scaling, LogisticRegression(C=1.0,max_iter=500,random_state=20260729); no tuning",
+  "reference": "training-window prevalence",
+  "metrics": ["pr_auc", "pr_auc_gain", "roc_auc", "brier", "brier_skill", "log_loss", "calibration_in_large", "calibration_slope", "precision_at_10pct", "recall_at_10pct"],
+  "cohorts": {
+    "invoice_history": ["one_prior_invoice", "multiple_prior_invoices"],
+    "tenure": ["tenure_le_90_days", "tenure_gt_90_days"]
+  },
+  "stability_summaries": ["per-cutoff metrics", "median and range", "positive PR-AUC-gain fraction", "standardized coefficient sign consistency and range", "cohort per-cutoff metrics", "population and outcome drift"],
+  "negative_control": "within-training-cutoff label permutation, refit at every evaluation cutoff using the frozen seed",
+  "interpretation_rule": "Call a pattern temporally stable only descriptively when PR-AUC gain is positive in at least 80% of evaluation cutoffs and the key coefficient sign is unchanged in at least 80%; report calibration and cohort exceptions. No causal or hidden-holdout claim.",
+  "minimum_cohort_reporting_n": 100
+}
