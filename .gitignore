@@ -4,3 +4,6 @@ __pycache__/
 data/raw/**
 !data/raw/.gitkeep
 .DS_Store
+
+# derived from licensed datasets; rebuild with scripts/build_exploratory_features.py
+artifacts/exploratory/features/*.parquet
