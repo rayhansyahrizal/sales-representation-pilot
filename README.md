@@ -1,5 +1,7 @@
 # Sales Representation Pilot
 
+[![tests](https://github.com/rayhansyahrizal/sales-representation-pilot/actions/workflows/tests.yml/badge.svg)](https://github.com/rayhansyahrizal/sales-representation-pilot/actions/workflows/tests.yml)
+
 Can you predict who buys again, and what they buy next, from plain transaction logs? This repo tests
 that on two public retail datasets, with one unusual rule: **every analysis is written down and frozen
 before it is run**, so a good-looking result cannot be produced by trying things until one works.
@@ -19,6 +21,12 @@ or confirmatory result, and nothing here claims causation.
 | Is it real, or leakage? | Online Retail II | Shuffling labels removed most of it: gain fell to 0.049 with chance-level ROC-AUC 0.440. |
 | Does a simple model beat "most common next step" for browsing behaviour? | Retailrocket | No. Transition accuracy 0.930 vs 0.930 baseline: zero gain. |
 
+![Monthly PR-AUC against prevalence and a shuffled-label control](docs/figures/temporal-stability.svg)
+
+The model line stays well above both baselines in every month. The shuffled-label control is noisy in
+the first few months (it spikes in Sep and Nov 2010), which is one more reason these results stay
+exploratory.
+
 What drives the repeat-purchase signal: recent buying, more previous invoices, and more distinct items
 bought before. All three had the same sign in 17 of 17 fits.
 
@@ -32,7 +40,8 @@ bought before. All three had the same sign in 17 of 17 fits.
   (`docs/feature-availability.md`).
 - **A gate that says no.** The modeling gate is currently **REVISE**: confirmatory modeling stays
   blocked until a holdout exists that the builder provably cannot see. A file in this repo cannot prove
-  that, so the gate does not pretend it can (`artifacts/gate-report.md`).
+  that, so the gate does not pretend it can (`artifacts/gate-report.md`,
+  [decision 0001](docs/decisions/0001-no-confirmatory-claims-without-an-unseen-holdout.md)).
 
 ## Reproduce
 
@@ -47,6 +56,7 @@ uv run python scripts/run_exploratory_baselines.py
 uv run python scripts/run_temporal_stability.py
 uv run python scripts/run_temporal_sensitivity.py
 uv run pytest -q                          # 20 tests
+uv run python scripts/plot_temporal_stability.py   # redraws the chart above
 ```
 
 ## Data
@@ -68,3 +78,8 @@ Raw data and derived feature files are **not** in this repo. `acquire.py` and
 | `manifests/` | Sources, checksums and frozen analysis manifests |
 | `docs/` | Preregistrations, feature availability, confirmation design |
 | `artifacts/` | Machine-readable results and the reports quoted above |
+| `docs/decisions/` | Decision records |
+
+## License
+
+Code: [MIT](LICENSE). The datasets keep their own licenses (see above) and are not redistributed here.

@@ -7,3 +7,8 @@ data/raw/**
 
 # derived from licensed datasets; rebuild with scripts/build_exploratory_features.py
 artifacts/exploratory/features/*.parquet
+
+# working notes, kept local
+team-status.md
+.hermes/
+docs/ai-application-*.md
